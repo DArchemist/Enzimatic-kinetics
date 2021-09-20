@@ -517,7 +517,7 @@ plot!(p4, v__S, linear_fitted_data_3)
 md"""
 After fitting the data to a linear curve, we get the kinetic parameters $K_m$ and $v_{max}$:
 
-$v_{max} = 2.40 \frac{\mu M}{tube} = 0.240 \frac{mM}{min}$
+$v_{max} = 2.40 \frac{\mu M}{tube} = 0.240 \frac{\mu M}{min}$
 
 $k_m = 0.499 \mu M$
 
@@ -603,11 +603,18 @@ Both, $v_{max}$ and $k_m$ changed, which indicates **Uncompetitive inhibition**.
 
 We can compute $K_I$ like this:
 
-$K_I = \frac{[I]}{\frac{k_d}{k_{dapp}} - 1} = \frac{5.0 mM}{\frac{0.50}{0.67} - 1}$
+$K_I = \frac{[I]}{\frac{k_d}{k_{dapp}} - 1} = \frac{5.0 mM}{\frac{0.50}{0.67} - 1} = -19.71 mM$
+
+$K_I = \frac{[I]}{\frac{v_m}{v_{mapp}} - 1} = \frac{5.0 mM}{\frac{0.24}{0.17} - 1} = 12.14 mM$
+
+Esa constante negativa no tiene sentido. 
 """
 
 # ╔═╡ 67d53def-87cd-47c7-8ace-e8249dbabda0
 5 / (0.5/0.67 - 1)
+
+# ╔═╡ c424501a-11c9-4695-9a9d-c7bbd686dd6c
+5 / (0.24/0.17 -1)
 
 # ╔═╡ ece4dec4-2631-403b-ba01-f506d0c03ce1
 
@@ -629,6 +636,18 @@ plot2
 # ╔═╡ 84b0982a-096f-4d13-ab75-f98341ecc25c
 "k_m Aparente = $k_m2 microM"
 
+# ╔═╡ ec12a93b-6cbc-4f83-86a9-e9e60ddbd991
+md"""
+Only $v_{max}$ changed, which indicates **Noncompetitive inhibition**. 
+
+We can compute $K_I$ like this:
+
+$K_I = \frac{[I]}{\frac{v_m}{v_{mapp}} - 1} = \frac{5.0 mM}{\frac{0.24}{0.12} - 1} = 5.0 mM$
+"""
+
+# ╔═╡ 13f77ab2-b99f-4548-8f74-b6abcf04325f
+5 / (0.24/0.12 - 1)
+
 # ╔═╡ 0f8be6a6-8997-4289-b439-ee165e94ae2a
 
 
@@ -649,6 +668,18 @@ plot3
 # ╔═╡ 17f16e09-6b7c-475d-ae93-cf66ee0b04d5
 "k_m Aparente = $k_m3 microM"
 
+# ╔═╡ 792196a0-e88b-46b7-9d0f-0bf709f12229
+md"""
+Only $k_{m}$ changed, which indicates **Competitive inhibition**. 
+
+We can compute $K_I$ like this:
+
+$K_I = \frac{[I]}{\frac{k_{mapp}}{k_m} - 1} = \frac{25 mM}{\frac{3.08}{0.5} - 1} = 4.84  mM$
+"""
+
+# ╔═╡ 5a9c8db8-168a-447e-a6bb-5a1cc2a55fa5
+25 / (3.08/0.5 - 1)
+
 # ╔═╡ 466e3ac3-cd11-447f-9f91-2ce4c999e9ef
 
 
@@ -668,6 +699,39 @@ plot4
 
 # ╔═╡ 8b2beb4d-d265-4dc0-8371-c0179c47fe9a
 "k_m Aparente = $k_m4 microM"
+
+# ╔═╡ cc0a9a02-c05e-4297-95cb-133413a95778
+md"""
+Only $v_{max}$ changed, which indicates **Noncompetitive inhibition**. 
+
+We can compute $K_I$ like this:
+
+$K_I = \frac{[I]}{\frac{v_m}{v_{mapp}} - 1} = \frac{10 mM}{\frac{0.24}{0.08} - 1} = 5.0 mM$
+"""
+
+# ╔═╡ 91c0873c-0de5-41d4-ba1d-d17e31ce7a31
+10 / (0.24/0.08 - 1)
+
+# ╔═╡ f39b5f46-cc17-4be4-91e5-104a6c2c5f17
+
+
+# ╔═╡ cc427e54-b0d5-4471-b719-d28bfd3e462f
+md"""
+>2. For uninhibited enzymes, when [S] = 0.4 mM what fraction of the enzyme is ES? Free E?
+"""
+
+# ╔═╡ f4a4b3dc-2792-410c-acc6-85c38b352411
+md"""
+**Answer:**
+The fraction of enzyme bound to substrate is:
+
+$X_{ES}= \frac{[S]}{[S] + k_m} = \frac{0.4e3 \mu M}{0.4e3 \mu M + 0.5 \mu M} \approx 1$
+
+The fraction of free enzime, $X_E$ is then $\approx 0$
+"""
+
+# ╔═╡ e71884b7-8099-4dc5-9352-9ef2ac4efac4
+
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -1652,7 +1716,7 @@ version = "0.9.1+5"
 # ╠═1c8b6607-186b-4aa3-bd68-ddff821a64a3
 # ╠═5f5d6b94-5a0c-42bb-a17e-8a20ed61bf7d
 # ╠═b43edf17-204c-4fdb-82df-ac3668c016a6
-# ╟─8ca98a28-6efd-400d-a900-2922418d9822
+# ╠═8ca98a28-6efd-400d-a900-2922418d9822
 # ╟─1b0f4f50-2a89-470b-8034-ed8405b871d8
 # ╟─22658bba-060e-41ea-b4c2-a86647fb56c2
 # ╟─eb72068d-8a09-4817-a254-15901abda65b
@@ -1665,25 +1729,36 @@ version = "0.9.1+5"
 # ╠═5e6414c1-0e5b-4715-be50-e84c02478437
 # ╠═dbab97ca-fabc-4bf2-b84b-416a89ac1172
 # ╠═51ac8189-a162-45f3-9815-d76fe7702bf5
-# ╠═089a0161-bdb8-431b-b5b6-1ba0a95101b5
+# ╟─089a0161-bdb8-431b-b5b6-1ba0a95101b5
 # ╠═67d53def-87cd-47c7-8ace-e8249dbabda0
+# ╠═c424501a-11c9-4695-9a9d-c7bbd686dd6c
 # ╟─ece4dec4-2631-403b-ba01-f506d0c03ce1
 # ╟─697f8523-25f6-4413-86c2-5ebeaacf02af
 # ╠═d9976a5d-06f2-4d04-b711-e64651f04ba2
 # ╠═971b4a12-60f4-4901-8f06-3ea86c2700f7
 # ╠═297d81f1-f798-4bc1-9cb2-625960325ec8
 # ╠═84b0982a-096f-4d13-ab75-f98341ecc25c
+# ╟─ec12a93b-6cbc-4f83-86a9-e9e60ddbd991
+# ╠═13f77ab2-b99f-4548-8f74-b6abcf04325f
 # ╟─0f8be6a6-8997-4289-b439-ee165e94ae2a
 # ╟─fdf10260-362c-44cb-8729-8e6e51dd6d92
 # ╠═9b12ec6b-7ab8-4138-bb94-95286bf29d1d
 # ╠═5483b0b1-b46b-4d1d-a32b-cd81b9c29252
 # ╠═06da0f32-2b5e-4235-b5da-9e9769cac275
 # ╠═17f16e09-6b7c-475d-ae93-cf66ee0b04d5
+# ╟─792196a0-e88b-46b7-9d0f-0bf709f12229
+# ╠═5a9c8db8-168a-447e-a6bb-5a1cc2a55fa5
 # ╟─466e3ac3-cd11-447f-9f91-2ce4c999e9ef
 # ╟─d45561e3-7b58-472d-bbf7-fe157973da9d
 # ╠═90165c8e-2e4f-42ce-bb62-f600f60e2360
 # ╠═6f10c9a0-5b62-4fdb-9b9a-20b99df78c34
 # ╠═a72e519d-07bd-47b1-b990-009fc7c693f3
 # ╠═8b2beb4d-d265-4dc0-8371-c0179c47fe9a
+# ╠═cc0a9a02-c05e-4297-95cb-133413a95778
+# ╠═91c0873c-0de5-41d4-ba1d-d17e31ce7a31
+# ╟─f39b5f46-cc17-4be4-91e5-104a6c2c5f17
+# ╠═cc427e54-b0d5-4471-b719-d28bfd3e462f
+# ╟─f4a4b3dc-2792-410c-acc6-85c38b352411
+# ╟─e71884b7-8099-4dc5-9352-9ef2ac4efac4
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
