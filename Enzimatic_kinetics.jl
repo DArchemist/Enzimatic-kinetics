@@ -227,7 +227,7 @@ Now we plot both, experimental data and fitted data to confirm that $[P]$ vs $t$
 """
 
 # ╔═╡ 0ec0bdaa-9cfc-4afc-918c-2c6316e045a3
-plot!(t, c_P_fitted_data)
+plot!(p, t, c_P_fitted_data)
 
 # ╔═╡ ba6a3a35-57ff-49e2-a0dd-480c1f9bfd16
 md"""
@@ -296,12 +296,21 @@ coef2 = linear_fit(__S, __r)
 md"""
 The resulting linear function is:
 
-$\frac{1}{r} = 1481.86 * \frac{1}{[S]} + 523.162$
+$\frac{1}{r} = 523.162 * \frac{1}{[S]} + 1481.86$
 """
+
+# ╔═╡ b1fca0a2-1ae4-4651-bcdd-d87964be781d
+linear_fitted(__s) = coef2[2] * __s + coef2[1]
+
+# ╔═╡ 6cc6f205-c8cb-4780-a5dd-c4a24e7ebf3f
+linear_fitted_data = linear_fitted.(__S)
+
+# ╔═╡ 9c800be4-a018-4371-a66c-33737b038dea
+plot!(p2, __S, linear_fitted_data)
 
 # ╔═╡ deea50a9-e6f7-49ad-93a7-383f0263a172
 md"""
-After fitting the data to a linear curve, we get the kinetic parameters Km and Vmax:
+After fitting the data to a linear curve, we get the kinetic parameters $K_m$ and $V_{max}$:
 """
 
 # ╔═╡ c0e40b15-aae5-4bc6-b296-05e43425d9e0
@@ -324,7 +333,7 @@ $k_m = 0.353 mM$
 md"""
 Now we have gathered enough information to compute $K_{cat}$:
 
-$Kcat = \frac{V_{max}}{[E]} = \frac{0.000000675 M/s}{ 3.61e-10 M} \approx 1870 s^{-1}$
+$K_{cat} = \frac{V_{max}}{[E]} = \frac{0.000000675 M/s}{ 3.61e-10 M} \approx 1870 s^{-1}$
 """
 
 # ╔═╡ 19862db5-8c9f-40ae-99e3-71996d12ae6e
@@ -335,6 +344,330 @@ md"""
 **Experiment 2**
 >In a second experiment, a series of test tubes were set up, each containing a different amount of buffered substrate at pH 7 but each in a volume of exactly 4.00 ml. The same enzyme solution used above (absorbance at 280 nm = 0.485) was diluted 2.00 ml in 250 ml as in I, then again 2.00 ml in 200 ml. Portions of 1.00 ml of this twice diluted enzyme were added at t = 0 to each of the test tubes of buffered substrate. The reaction was stopped in just 10.0 minutes by adding perchloric acid; a suitable reagent was added to provide for a colorimetric determination of the product. The results were as follows:
 """
+
+# ╔═╡ 5e7f008a-7606-4626-9509-e4f1e1bbac24
+md"""
+| $[S]$ (mM)    | Amount of product ($\mu mol$/tube) |
+| :-----:     | :---------:                        |
+|10.0         | 2.29                               |
+|5.00         | 2.18                               |
+|2.50         | 2.00                               |
+|1.20         | 1.69                               |
+|0.80         | 1.48                               |
+|0.60         | 1.31                               |
+|0.40         | 1.07                               |
+|0.20         | 0.686                              |
+|0.10         | 0.400                              |
+"""
+
+# ╔═╡ a294ff66-bd1a-4d99-8963-e0971253cbad
+md"""
+>1. Plot 1/v vs 1/ [S] where v is in units of µmol per tube and [S] in millimoles/liter. Evaluate $k_{m}$ , $v_{m}$ , and $k_{cat}$ from this plot.
+"""
+
+# ╔═╡ 7d910fcb-3f3b-46d3-8680-0fbddac7ba0c
+md"""
+**Answer:**
+"""
+
+# ╔═╡ 71461c4c-21e6-49c2-b075-9ba5e5f32350
+md"""
+**Enzime concentration after dilution**
+
+Initial concentration [M] = $\frac{0.485}{21500 M^{-1} cm^{-1} * 1 cm} = 2.25e-5 M$
+
+Total number of moles in 2 mL [mol] = $4.5e-8 mol$
+
+**Concentration after dilution [M]** = $\frac{4.50e-8 mol}{0.200 L} = 2.25e-7 M$
+
+"""
+
+# ╔═╡ 7e29a6e2-93b9-4366-a8f7-c43aff7e8029
+c_S_2 = [10.0,
+5.00,	
+2.50,
+1.20,	
+0.80,	
+0.60,	
+0.40,	
+0.20,	
+0.10]
+
+# ╔═╡ f8ed4e5c-8900-48dc-9aac-fffdc38af58c
+v = [2.29,
+2.18,
+2.00,
+1.69,
+1.48,
+1.31,
+1.07,
+0.686,
+0.400]
+
+# ╔═╡ 6b4e692f-87f9-47e0-8ba2-17c5ac307d3c
+__v = 1 ./ v
+
+# ╔═╡ 4e02c512-9603-40ba-a8ba-18c1bd934084
+__S_2 = 1 ./ c_S_2
+
+# ╔═╡ a04dd81d-6efa-409a-b36a-a150815d37ef
+p3 = plot(__S_2, __v, seriestype = :scatter, legend=false, ylabel="1/v, [tube/microMol]", xlabel="1/[S], [L/mMol]")
+
+# ╔═╡ 78b50b4c-83eb-41bc-9b53-4759ee5bf7a1
+md"""
+Now we fit the data to a linear curve, like this:
+"""
+
+# ╔═╡ edf80058-be22-4489-afb8-b52ae2ad4fd5
+coef3 = linear_fit(__S_2, __v)
+
+# ╔═╡ 0110e998-39f9-4ec2-ba2a-997110db4791
+md"""
+The resulting linear function is:
+
+$\frac{1}{v} = 0.208 * \frac{1}{[S]} + 0.416$
+"""
+
+# ╔═╡ 7c396b13-ca52-47ea-b457-b8d64edd56fe
+linear_fitted_2(__s) = coef3[2] * __s + coef3[1]
+
+# ╔═╡ d093413f-9cf4-4314-988a-b13b51069854
+linear_fitted_data_2 = linear_fitted_2.(__S_2)
+
+# ╔═╡ 8ed99266-6d34-4497-99da-0d41806cabd7
+plot!(p3, __S_2, linear_fitted_data_2)
+
+# ╔═╡ 281daf6b-7132-42cf-8be5-2b11e96bada9
+md"""
+After fitting the data to a linear curve, we get the kinetic parameters $K_m$ and $v_{max}$:
+
+"""
+
+# ╔═╡ 01efbbd7-ffef-427d-984c-825758e9e616
+v_max_2 = 1 / coef3[1]
+
+# ╔═╡ 76504409-9674-4684-9209-18d2fe8ca7b5
+k_m_2 = coef3[2] * v_max_2 
+
+# ╔═╡ 673c3d08-e202-4045-b59c-b44c930851e8
+md"""
+$v_{max} = 2.40 \frac{\mu M}{tube} = 0.24 \frac{\mu M}{min}$
+
+$k_m = 0.500 \mu M$
+"""
+
+# ╔═╡ ac6cf72b-c1ed-42d5-bcbd-3334be59b6da
+md"""
+Now we have gathered enough information to compute $K_{cat}$:
+
+$K_{cat} = \frac{V_{max}}{[E]} = \frac{0.000000240 M/min}{ 2.25e-7 M} \approx 1.067 min^{-1}$
+"""
+
+# ╔═╡ a0290f9e-162f-4eb8-941c-127ddca49749
+
+
+# ╔═╡ 8983e7f9-8222-41c4-a9b0-c651cb491308
+md"""
+>2. Plot the same data as v/[S] vs. v. Again evaluate $k_m$ and $v_m$.
+"""
+
+# ╔═╡ c2ac22b4-422d-4845-a57f-f3ea033db460
+md"""
+Multiplying the Lineweaver-Burk by $r$, and carrying out some arithmetical transformations, we arrive to the Eadie-Mofstee equation:
+
+$v = v_{max} - k_m * \frac{v}{[S]}$
+"""
+
+# ╔═╡ a67adc45-81f6-402c-985b-06ddfb0a7886
+v__S = v ./ c_S_2
+
+# ╔═╡ 75e1a539-1dc6-4fdb-a829-d6554a5abac0
+md"""
+Then we plot $v$ vs. $\frac{v}{[S]}$, like this:
+"""
+
+# ╔═╡ 1d49c42a-6e6f-4e76-bcb9-3979b90fc3c6
+p4 = plot(v__S, v, seriestype = :scatter, legend=false, ylabel="v, [microMol/tube]", xlabel="v/[S], [microMol/(mMol * tube)]")
+
+# ╔═╡ cf6a1af5-7b29-4995-805e-b18c80877bb1
+md"""
+Now we fit the data to a linear curve, like this:
+"""
+
+# ╔═╡ c964ad11-733b-42cb-98fd-ee203aa9f2e1
+coef4 = linear_fit(v__S, v)
+
+# ╔═╡ d17ce2a7-8571-40ad-b517-15dd191ce6e8
+md"""
+The resulting linear function is:
+
+$v = 2.40 - 0.499 * \frac{v}{[S]}$
+"""
+
+# ╔═╡ 1c8b6607-186b-4aa3-bd68-ddff821a64a3
+linear_fitted_3(v__S) = coef4[1] + coef4[2] * v__S
+
+# ╔═╡ 5f5d6b94-5a0c-42bb-a17e-8a20ed61bf7d
+linear_fitted_data_3 = linear_fitted_3.(v__S)
+
+# ╔═╡ b43edf17-204c-4fdb-82df-ac3668c016a6
+plot!(p4, v__S, linear_fitted_data_3)
+
+# ╔═╡ 8ca98a28-6efd-400d-a900-2922418d9822
+md"""
+After fitting the data to a linear curve, we get the kinetic parameters $K_m$ and $v_{max}$:
+
+$v_{max} = 2.40 \frac{\mu M}{tube} = 0.240 \frac{mM}{min}$
+
+$k_m = 0.499 \mu M$
+
+"""
+
+# ╔═╡ 1b0f4f50-2a89-470b-8034-ed8405b871d8
+
+
+# ╔═╡ 22658bba-060e-41ea-b4c2-a86647fb56c2
+md"""
+**Experiment 3**
+>The preceding experiment was repeated but an inhibitor was present in each tube in a concentration equal to 5.00 mM, 10.0 mM, or 25.0 mM. Two different inhibitors were used, A and B. The following results were obtained.
+"""
+
+# ╔═╡ eb72068d-8a09-4817-a254-15901abda65b
+md"""
+|[S], [mM] | Inhibitor A [I] = 5.00 mM | Inhibitor B [I] = 5.00 mM | Inhibitor A [I] = 25.0 mM | Inhibitor B [I] = 10 mM|
+| :----: | :----: | :----: | :----: | :----: |
+| 5.00   | 2.00   | 1.09   | 1.50   | 0.727  |
+| 2.50   | 0.71   | 1.00   | 1.09   | 0.667  |
+| 1.20   | 1.31   | 0.848  | 0.686  | 0.565  |
+| 0.80   | 1.07   | 0.739  | 0.505  | 0.492  |
+| 0.60   | 0.900  | 0.654  | 0.400  | 0.436  |
+| 0.40   | 0.686  | 0.533  | 0.282  | 0.356  |
+| 0.20   | 0.400  | 0.343  | 0.150  | 0.229  |
+| 0.10   | 0.218  | 0.200  | 0.077  | 0.133  |
+
+"""
+
+# ╔═╡ 05bf4f24-3265-46c2-9772-8829d0d2278e
+md"""
+>1. Plot l/v vs 1/[S] for each of these sets of data. For each case evaluate $v_m$, apparent $k_m$, and inhibitor constants $K_I$.
+"""
+
+# ╔═╡ 4519686a-cdde-4a3e-b2d7-d84828c05527
+md"""
+**Answer:**
+For this task we are going to create a function that carries out the needed computations on a given dataset.
+"""
+
+# ╔═╡ 55ce8dc1-1c58-4c14-91e7-4beb5da94ddd
+function kinetics(v, s) 
+	__v = 1 ./ v;
+	__s = 1 ./ s;
+	px = plot(__s, __v, seriestype = :scatter, legend=false, ylabel="1/v [tube/microMol]", xlabel="1/[S], [L/mMol]")
+	coef_x = linear_fit(__s, __v);
+	fit_data = coef_x[2] .* __s .+ coef_x[1];
+	v_max_x = (1 / coef_x[1]) / 10;
+	k_m_x = coef_x[2] * v_max_x * 10;
+	plot!(px, __s, fit_data)
+	return px, v_max_x, k_m_x
+end
+	
+	
+	
+	
+
+# ╔═╡ f8ba971d-6736-4b94-88c7-2998a38ce894
+md"""
+Now we apply this function to every dataset, like this:
+"""
+
+# ╔═╡ 31a47595-7db2-4d2c-a77d-77d1b863af78
+md"""
+**Inhibitor A [I] = 5.00 mM**
+"""
+
+# ╔═╡ a7c652dc-018e-4b12-9ea2-6a71c92e5f1a
+plot1, v_max1, k_m1 = kinetics([2.00, 0.71, 1.31, 1.07, 0.900, 0.686, 0.400, 0.218], [5.00, 2.50, 1.20, 0.800, 0.600, 0.400, 0.200, 0.100])
+
+# ╔═╡ 5e6414c1-0e5b-4715-be50-e84c02478437
+plot1
+
+# ╔═╡ dbab97ca-fabc-4bf2-b84b-416a89ac1172
+"V_max Aparente = $v_max1 mM/min"
+
+# ╔═╡ 51ac8189-a162-45f3-9815-d76fe7702bf5
+"k_m Aparente = $k_m1 microM"
+
+# ╔═╡ 089a0161-bdb8-431b-b5b6-1ba0a95101b5
+md"""
+Both, $v_{max}$ and $k_m$ changed, which indicates **Uncompetitive inhibition**. 
+
+We can compute $K_I$ like this:
+
+$K_I = \frac{[I]}{\frac{k_d}{k_{dapp}} - 1} = \frac{5.0 mM}{\frac{0.50}{0.67} - 1}$
+"""
+
+# ╔═╡ 67d53def-87cd-47c7-8ace-e8249dbabda0
+5 / (0.5/0.67 - 1)
+
+# ╔═╡ ece4dec4-2631-403b-ba01-f506d0c03ce1
+
+
+# ╔═╡ 697f8523-25f6-4413-86c2-5ebeaacf02af
+md"""
+**Inhibitor B [I] = 5.00 mM**
+"""
+
+# ╔═╡ d9976a5d-06f2-4d04-b711-e64651f04ba2
+plot2, v_max2, k_m2 = kinetics([1.09, 1.00, 0.848, 0.739, 0.654, 0.533, 0.343, 0.200], [5.00, 2.50, 1.20, 0.800, 0.600, 0.400, 0.200, 0.100])
+
+# ╔═╡ 971b4a12-60f4-4901-8f06-3ea86c2700f7
+plot2
+
+# ╔═╡ 297d81f1-f798-4bc1-9cb2-625960325ec8
+"V_max Aparente = $v_max2 mM/min"
+
+# ╔═╡ 84b0982a-096f-4d13-ab75-f98341ecc25c
+"k_m Aparente = $k_m2 microM"
+
+# ╔═╡ 0f8be6a6-8997-4289-b439-ee165e94ae2a
+
+
+# ╔═╡ fdf10260-362c-44cb-8729-8e6e51dd6d92
+md"""
+**Inhibitor A [I] = 25.0 mM**
+"""
+
+# ╔═╡ 9b12ec6b-7ab8-4138-bb94-95286bf29d1d
+plot3, v_max3, k_m3 = kinetics([1.50, 1.09, 0.686, 0.505, 0.400, 0.282, 0.150, 0.077], [5.00, 2.50, 1.20, 0.800, 0.600, 0.400, 0.200, 0.100])
+
+# ╔═╡ 5483b0b1-b46b-4d1d-a32b-cd81b9c29252
+plot3
+
+# ╔═╡ 06da0f32-2b5e-4235-b5da-9e9769cac275
+"V_max Aparente = $v_max3 mM/min"
+
+# ╔═╡ 17f16e09-6b7c-475d-ae93-cf66ee0b04d5
+"k_m Aparente = $k_m3 microM"
+
+# ╔═╡ 466e3ac3-cd11-447f-9f91-2ce4c999e9ef
+
+
+# ╔═╡ d45561e3-7b58-472d-bbf7-fe157973da9d
+md"""
+**Inhibitor B [I] = 10 mM**
+"""
+
+# ╔═╡ 90165c8e-2e4f-42ce-bb62-f600f60e2360
+plot4, v_max4, k_m4 = kinetics([0.727, 0.667, 0.565, 0.492, 0.436, 0.356, 0.229, 0.133], [5.00, 2.50, 1.20, 0.800, 0.600, 0.400, 0.200, 0.100])
+
+# ╔═╡ 6f10c9a0-5b62-4fdb-9b9a-20b99df78c34
+plot4
+
+# ╔═╡ a72e519d-07bd-47b1-b990-009fc7c693f3
+"V_max Aparente = $v_max4 mM/min"
+
+# ╔═╡ 8b2beb4d-d265-4dc0-8371-c0179c47fe9a
+"k_m Aparente = $k_m4 microM"
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -1254,7 +1587,7 @@ version = "0.9.1+5"
 # ╟─24192914-fe6b-4ab8-b49b-b70458b29280
 # ╟─332356b7-fde4-45fe-8a1d-62a5517450e6
 # ╟─bb92048e-ffdd-4dbb-91f8-dc4799b812b1
-# ╟─ed7b38c9-84f9-430c-a4e0-376f68536aeb
+# ╠═ed7b38c9-84f9-430c-a4e0-376f68536aeb
 # ╟─ce5c745f-8459-442d-95f9-674a3c73d242
 # ╠═63a39f4e-6597-49bb-9156-429aa040792d
 # ╟─daeb8a07-4847-474a-b458-722c54e1f003
@@ -1263,7 +1596,7 @@ version = "0.9.1+5"
 # ╠═287d691f-4e8e-4707-b8cd-9a489b0b449a
 # ╟─95dfe925-9338-41fc-a8c4-2b902ac5958f
 # ╟─ac22ff09-fad3-433b-b7ca-161b8198daf7
-# ╟─0ec0bdaa-9cfc-4afc-918c-2c6316e045a3
+# ╠═0ec0bdaa-9cfc-4afc-918c-2c6316e045a3
 # ╟─ba6a3a35-57ff-49e2-a0dd-480c1f9bfd16
 # ╠═a4f5ecfe-5dc6-4330-b5d3-3b7d1ef7eea2
 # ╟─73260c32-08ec-4876-9278-07de82d60678
@@ -1271,11 +1604,14 @@ version = "0.9.1+5"
 # ╟─23e7be1b-4a86-46dc-b7c1-cd433d895b1c
 # ╟─228c7a9c-4f91-4110-9f2b-54e107835183
 # ╟─47707f72-e980-4b2a-9c2c-f226bc9d22b0
-# ╟─fbdd90d6-b56b-4f78-aaeb-06fea32340ce
+# ╠═fbdd90d6-b56b-4f78-aaeb-06fea32340ce
 # ╟─c172337c-be49-4f09-90b8-2f58fd32ac93
 # ╟─d30980b1-862e-4b1e-b3f4-137127b983a4
 # ╠═9b00fb90-d930-4f36-8c0a-b9b0514386d7
 # ╟─b6d6c4a5-db74-4d58-a311-b0be087841a8
+# ╠═b1fca0a2-1ae4-4651-bcdd-d87964be781d
+# ╟─6cc6f205-c8cb-4780-a5dd-c4a24e7ebf3f
+# ╠═9c800be4-a018-4371-a66c-33737b038dea
 # ╟─deea50a9-e6f7-49ad-93a7-383f0263a172
 # ╟─c0e40b15-aae5-4bc6-b296-05e43425d9e0
 # ╟─b9c8c2ba-2f8c-40ad-9675-08ef6d93f530
@@ -1284,5 +1620,70 @@ version = "0.9.1+5"
 # ╟─a8875485-7f02-4813-b5b2-85620f57c6d6
 # ╟─19862db5-8c9f-40ae-99e3-71996d12ae6e
 # ╟─f5ecae38-c8b6-420a-a05c-0813de54e742
+# ╟─5e7f008a-7606-4626-9509-e4f1e1bbac24
+# ╟─a294ff66-bd1a-4d99-8963-e0971253cbad
+# ╟─7d910fcb-3f3b-46d3-8680-0fbddac7ba0c
+# ╟─71461c4c-21e6-49c2-b075-9ba5e5f32350
+# ╟─7e29a6e2-93b9-4366-a8f7-c43aff7e8029
+# ╟─f8ed4e5c-8900-48dc-9aac-fffdc38af58c
+# ╠═6b4e692f-87f9-47e0-8ba2-17c5ac307d3c
+# ╠═4e02c512-9603-40ba-a8ba-18c1bd934084
+# ╠═a04dd81d-6efa-409a-b36a-a150815d37ef
+# ╟─78b50b4c-83eb-41bc-9b53-4759ee5bf7a1
+# ╠═edf80058-be22-4489-afb8-b52ae2ad4fd5
+# ╟─0110e998-39f9-4ec2-ba2a-997110db4791
+# ╠═7c396b13-ca52-47ea-b457-b8d64edd56fe
+# ╠═d093413f-9cf4-4314-988a-b13b51069854
+# ╠═8ed99266-6d34-4497-99da-0d41806cabd7
+# ╟─281daf6b-7132-42cf-8be5-2b11e96bada9
+# ╠═01efbbd7-ffef-427d-984c-825758e9e616
+# ╠═76504409-9674-4684-9209-18d2fe8ca7b5
+# ╟─673c3d08-e202-4045-b59c-b44c930851e8
+# ╟─ac6cf72b-c1ed-42d5-bcbd-3334be59b6da
+# ╟─a0290f9e-162f-4eb8-941c-127ddca49749
+# ╟─8983e7f9-8222-41c4-a9b0-c651cb491308
+# ╟─c2ac22b4-422d-4845-a57f-f3ea033db460
+# ╠═a67adc45-81f6-402c-985b-06ddfb0a7886
+# ╟─75e1a539-1dc6-4fdb-a829-d6554a5abac0
+# ╟─1d49c42a-6e6f-4e76-bcb9-3979b90fc3c6
+# ╟─cf6a1af5-7b29-4995-805e-b18c80877bb1
+# ╠═c964ad11-733b-42cb-98fd-ee203aa9f2e1
+# ╟─d17ce2a7-8571-40ad-b517-15dd191ce6e8
+# ╠═1c8b6607-186b-4aa3-bd68-ddff821a64a3
+# ╠═5f5d6b94-5a0c-42bb-a17e-8a20ed61bf7d
+# ╠═b43edf17-204c-4fdb-82df-ac3668c016a6
+# ╟─8ca98a28-6efd-400d-a900-2922418d9822
+# ╟─1b0f4f50-2a89-470b-8034-ed8405b871d8
+# ╟─22658bba-060e-41ea-b4c2-a86647fb56c2
+# ╟─eb72068d-8a09-4817-a254-15901abda65b
+# ╟─05bf4f24-3265-46c2-9772-8829d0d2278e
+# ╟─4519686a-cdde-4a3e-b2d7-d84828c05527
+# ╠═55ce8dc1-1c58-4c14-91e7-4beb5da94ddd
+# ╟─f8ba971d-6736-4b94-88c7-2998a38ce894
+# ╟─31a47595-7db2-4d2c-a77d-77d1b863af78
+# ╠═a7c652dc-018e-4b12-9ea2-6a71c92e5f1a
+# ╠═5e6414c1-0e5b-4715-be50-e84c02478437
+# ╠═dbab97ca-fabc-4bf2-b84b-416a89ac1172
+# ╠═51ac8189-a162-45f3-9815-d76fe7702bf5
+# ╠═089a0161-bdb8-431b-b5b6-1ba0a95101b5
+# ╠═67d53def-87cd-47c7-8ace-e8249dbabda0
+# ╟─ece4dec4-2631-403b-ba01-f506d0c03ce1
+# ╟─697f8523-25f6-4413-86c2-5ebeaacf02af
+# ╠═d9976a5d-06f2-4d04-b711-e64651f04ba2
+# ╠═971b4a12-60f4-4901-8f06-3ea86c2700f7
+# ╠═297d81f1-f798-4bc1-9cb2-625960325ec8
+# ╠═84b0982a-096f-4d13-ab75-f98341ecc25c
+# ╟─0f8be6a6-8997-4289-b439-ee165e94ae2a
+# ╟─fdf10260-362c-44cb-8729-8e6e51dd6d92
+# ╠═9b12ec6b-7ab8-4138-bb94-95286bf29d1d
+# ╠═5483b0b1-b46b-4d1d-a32b-cd81b9c29252
+# ╠═06da0f32-2b5e-4235-b5da-9e9769cac275
+# ╠═17f16e09-6b7c-475d-ae93-cf66ee0b04d5
+# ╟─466e3ac3-cd11-447f-9f91-2ce4c999e9ef
+# ╟─d45561e3-7b58-472d-bbf7-fe157973da9d
+# ╠═90165c8e-2e4f-42ce-bb62-f600f60e2360
+# ╠═6f10c9a0-5b62-4fdb-9b9a-20b99df78c34
+# ╠═a72e519d-07bd-47b1-b990-009fc7c693f3
+# ╠═8b2beb4d-d265-4dc0-8371-c0179c47fe9a
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
